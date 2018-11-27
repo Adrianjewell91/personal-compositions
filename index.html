@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Adrian's Personal Compositions</title>
+</head>
+
+<body>
+    <header>Adrian's Personal Compositions</header>
+    <button onclick="document.querySelector('audio').play()">Play all</button>
+    <hr>
+</body>
+<script>
+    var songlist = [
+        'assets/ascendent.mp3',
+        'assets/collage.m4a',
+        'assets/negotation.mp3',
+        'assets/desertwind.mp3',
+        'assets/powertime.mp3',
+        'assets/strange.mp3',
+        'assets/clubbeat.mp3',
+        'assets/slaughter.m4a'
+    ];
+
+    // Build the list.
+    songlist.forEach(song => document.body.appendChild(addAudioElement(song)));
+    audios = document.querySelectorAll('audio');
+
+    // Implement such that clicking a new song ends the current one.
+    var currentSong = null;
+
+    audios.forEach(audio => {
+        audio.addEventListener('play', (e) => {
+            if (currentSong && currentSong !== audio) {
+                currentSong.pause()
+            }
+            currentSong = audio;
+        });
+    });
+
+    //Implement autoplay
+    audios.forEach(audio => audio.addEventListener('ended', (e) => {
+        try {
+            var next = e.target.parentElement.nextSibling.querySelector('audio');
+        } catch {}
+        finally {
+            // console.log('here');
+            if (!next) {
+                next = audios[0];
+            }
+            next.currentTime = 0;
+            next.play(); 
+            next.focus();   
+            currentSong = next;
+        }
+    }));
+
+    //Helper Function
+    function addAudioElement(src) {
+        var section = document.createElement('section');
+        var audio = document.createElement('audio');
+        var header = document.createElement('header');
+        audio.setAttribute('src', src);
+        audio.setAttribute('controls', true);
+        header.textContent = src.split('/')[1];
+        section.appendChild(header);
+        section.appendChild(audio);
+        return section;
+    }
+</script>
+
+</html>
